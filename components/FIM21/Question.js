@@ -387,6 +387,7 @@ class Question extends Component {
       }
 
     } catch (error) {
+      console.log("err: ", error)
       message.error("Gagal menyimpan Data")
     }
   }
@@ -395,10 +396,38 @@ class Question extends Component {
     this.setState(prevState => ({ isLoadButton: !prevState.isLoadButton }))
   }
 
-  submitEvent = () => {
+  submitEvent = async () => {
     const { answers } = this.state;
+    const { cookieLogin, dataUser, refetchStep } = this.props;
 
     console.log("answers: ", answers)
+
+    try {
+      const response = await fetch({
+        url: '/summary/update-final-submit',
+        method: 'post',
+        headers: {
+          'Authorization': `Bearer ${cookieLogin}`
+        },
+        data: {
+          tunnelId: dataUser.tunnelId,
+          ktpNumber: dataUser.Identity.ktpNumber,
+        }
+      })
+
+      const status = (response.data.status || false)
+
+      if (!status) {
+        message.error("Gagal menyimpan Data")
+      } else {
+        message.success(response.data.message)
+        refetchStep()
+      }
+
+    } catch (error) {
+      message.error("Gagal menyimpan Data")
+      
+    }
 
     //TODO: Hit Final Submit
 

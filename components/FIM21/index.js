@@ -6,9 +6,11 @@ import {
   notification,
   Skeleton,
   Steps,
+  Result,
+  Button,
 } from 'antd';
 import { fetch } from '@helper/fetch';
-import { KTP, DataDiri, ChooseTunnel, Question } from './Dynamic';
+import { KTP, DataDiri, ChooseTunnel, Question, Thank } from './Dynamic';
 const { Step } = Steps;
 
 class ContainerFIM21 extends Component {
@@ -74,8 +76,10 @@ class ContainerFIM21 extends Component {
         this.setState({ step: -2 })
       }
 
-      // this.setState({ step: response.data.data.step, stepReal: response.data.data.step })
-      this.setState({ step: 4, stepReal: 4 })
+      this.setState({ step: response.data.data.step, stepReal: response.data.data.step })
+      // this.setState({ step: 3, stepReal: 3 })
+      // this.setState({ step: 4, stepReal: 4 })
+      // this.setState({ step: 5, stepReal: 5 })
 
     } catch (error) {
       console.log("error: ", error);
@@ -139,15 +143,13 @@ class ContainerFIM21 extends Component {
     const { step, dataUser, isLoading } = this.state;
     const { cookieLogin } = this.props;
 
-    console.log("step: ", step)
-
     if (isLoading) {
       return <Skeleton active />
     }
 
     if (step === -1) {
       return <Skeleton active />
-    } else if (step === 0) {
+    } else if (step === 0 || step === null) {
       return <KTP refetchStep={this.refetchData} />
     } else if (step === 1) {
       return <KTP refetchStep={this.refetchData} />
@@ -157,6 +159,8 @@ class ContainerFIM21 extends Component {
       return <ChooseTunnel refetchStep={this.refetchData} cookieLogin={cookieLogin} dataUser={dataUser} />
     } else if (step === 4) {
       return <Question refetchStep={this.refetchData} cookieLogin={cookieLogin} dataUser={dataUser} />
+    } else if (step === 5) {
+      return <Thank refetchStep={this.refetchData} cookieLogin={cookieLogin} dataUser={dataUser} onChangeStep={this.onChangeStep} />
     }
 
     return <Empty />
@@ -166,7 +170,7 @@ class ContainerFIM21 extends Component {
     const { step } = this.state;
 
     return (<Fragment>
-      {this.renderStepBar()}
+      {step < 5 && this.renderStepBar()}
       {this.renderContent()}
     </Fragment>)
   }

@@ -62,7 +62,7 @@ class KTP extends Component {
   renderInput = (currentValue, onChangeFn) => {
     return (<Fragment>
       <p>
-        Mohon masukkan dengan nomor KTP anda yang asli. Hal ini berguna untuk Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista probare, quae sunt a te dicta? Refert tamen, quo modo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista probare, quae sunt a te dicta? Refert tamen, quo modo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista probare, quae sunt a te dicta? Refert tamen, quo modo.
+        Mohon masukkan dengan nomor KTP anda yang asli. Hal ini berguna untuk kami dalam verifikasi data.
       </p>
       <Input
         value={currentValue}
@@ -91,7 +91,7 @@ class KTP extends Component {
 
     return (<Fragment>
       <p>
-        Mohon Upload Foto KTP Asli anda. Hal ini berguna untuk Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista probare, quae sunt a te dicta? Refert tamen, quo modo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista probare, quae sunt a te dicta? Refert tamen, quo modo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista probare, quae sunt a te dicta? Refert tamen, quo modo.
+        Mohon Upload Foto KTP Asli anda. Hal ini berguna untuk kami dalam verifikasi data.
       </p>
       <Upload
         listType="picture-card"

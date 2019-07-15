@@ -40,6 +40,7 @@ class RegistrationForm extends React.Component {
     confirmDirty: false,
     autoCompleteResult: [],
     loading: false,
+    isLoadingButton: false,
   };
 
   componentDidMount = () => {
@@ -52,8 +53,19 @@ class RegistrationForm extends React.Component {
         name: Identity.name,
         address: Identity.address,
         phone: Identity.phone,
-        religion: Identity.religion,
-        bornDate: moment(Identity.bornDate, 'YYYY-MM-DD')
+        religion: Identity.religion || '',
+        bornPlace: Identity.bornPlace,
+        institution: Identity.institution,
+        gender: Identity.gender,
+        cityAddress: Identity.cityAddress,
+        provinceAddress: Identity.provinceAddress,
+        hoby: Identity.hoby,
+        bloodGroup: Identity.bloodGroup,
+        emergencyPhone: Identity.emergencyPhone,
+        expertise: Identity.expertise,
+        headline: Identity.headline,
+        otherReligion: Identity.otherReligion,
+        bornDate: moment(Identity.bornDate || new Date(), 'YYYY-MM-DD'),
       })
     }
 
@@ -71,8 +83,10 @@ class RegistrationForm extends React.Component {
   handleOnSubmit = async (values) => {
     const { cookieLogin, refetchStep } = this.props;
     const { urlKtp } = this.state;
-    const { address, name, phone, prefix, religion, bornDate } = values
+    const { otherReligion, bloodGroup, headline, expertise, emergencyPhone, hoby, gender, provinceAddress, cityAddress, address, name, phone, prefix, religion, bornDate, bornPlace, institution } = values
     console.log("values: ", values)
+
+    this.setState({ isLoadingButton: true })
 
     const response = await fetch({
       url: '/auth/save-profile',
@@ -81,12 +95,30 @@ class RegistrationForm extends React.Component {
         'Authorization': `Bearer ${cookieLogin}`
       },
       data: {
-        photoUrl: urlKtp,
         name: name,
         address: address,
         phone: phone,
+        headline: headline,
+        photoUrl: urlKtp,
         religion: religion,
+        bornPlace: bornPlace,
         bornDate: moment(bornDate, 'YYYY-MM-DD').format('YYYY-MM-DD HH:mm:ss'),
+        cityAddress: cityAddress,
+        provinceAddress: provinceAddress,
+        emergencyPhone: emergencyPhone,
+        gender: gender,
+        bloodGroup: bloodGroup,
+        hoby: hoby,
+        expertise: expertise,
+        institution: institution,
+        otherReligion: otherReligion,
+
+        // photoUrl: urlKtp,
+        // name: name,
+        // address: address,
+        // phone: phone,
+        // religion: religion,
+        // bornDate: moment(bornDate, 'YYYY-MM-DD').format('YYYY-MM-DD HH:mm:ss'),
       }
     })
 
@@ -94,13 +126,16 @@ class RegistrationForm extends React.Component {
 
     const status = (response.data.status || false)
     const messageAPI = (response.data.message || '')
+    const nullData = (response.data.nullData || [])
 
     if (!status) {
       message.error(messageAPI);
     } else {
-      message.success(messageAPI);
+      message.success(`${messageAPI} ${nullData.length > 0 && nullData.toString()}`);
       refetchStep();
     }
+
+    this.setState({ isLoadingButton: false })
   }
 
   handleConfirmBlur = e => {
@@ -194,8 +229,8 @@ class RegistrationForm extends React.Component {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const { autoCompleteResult } = this.state;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { autoCompleteResult, isLoadingButton } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -231,9 +266,11 @@ class RegistrationForm extends React.Component {
       <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
     ));
 
+    const religionss = getFieldValue("religion") || ''
+
     return (
       <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-        <Form.Item label="Name">
+        <Form.Item label="Nama">
           {getFieldDecorator("name", {
             rules: [
               {
@@ -243,26 +280,108 @@ class RegistrationForm extends React.Component {
             ]
           })(<Input />)}
         </Form.Item>
-        <Form.Item label="Address">
+        <Form.Item label="Alamat">
           {getFieldDecorator("address", {
             rules: [
               { required: true, message: "Please input your address!" }
             ]
           })(<TextArea rows={4} />)}
         </Form.Item>
-        <Form.Item label="Phone Number">
+        <Form.Item label="Kota">
+          {getFieldDecorator("cityAddress", {
+            rules: [
+              { required: true, message: "Isi Kota Alamat Anda!" }
+            ]
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Provinsi">
+          {getFieldDecorator("provinceAddress", {
+            rules: [
+              { required: true, message: "Isi Provinsi Alamat Anda!" }
+            ]
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Nomor Darurat">
+          {getFieldDecorator("emergencyPhone", {
+            rules: [
+              { required: true, message: "Isi Nomor Darurat Anda!" }
+            ]
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Keahlian">
+          {getFieldDecorator("expertise", {
+            rules: [
+              { required: true, message: "Isi Keahlian Anda!" }
+            ]
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Sebutan Anda">
+          {getFieldDecorator("headline", {
+            rules: [
+              { required: true, message: "Isi Personal Branding Anda!" }
+            ]
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Nomor Telpon">
           {getFieldDecorator("phone", {
             rules: [
               { required: true, message: "Please input your phone number!" }
             ]
           })(<Input style={{ width: "100%" }} />)}
         </Form.Item>
+        <Form.Item label="Tempat Lahir">
+          {getFieldDecorator("bornPlace", {
+            rules: [
+              { required: true, message: "Tolong isi tempat lahir anda!" }
+            ]
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Institusi">
+          {getFieldDecorator("institution", {
+            rules: [
+              { required: true, message: "Tolong isi Institusi asal anda!" }
+            ]
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Hobi">
+          {getFieldDecorator("hoby", {
+            rules: [
+              { required: true, message: "Tolong isi Hobi Anda!" }
+            ]
+          })(<Input />)}
+        </Form.Item>
         <Form.Item label="Tanggal Lahir">
           {getFieldDecorator("bornDate", {
             rules: [
-              { required: true, message: "Please input your Born Date!" }
+              { required: true, message: "Tolong isi tanggal lahir anda" }
             ]
           })(<DatePicker />)}
+        </Form.Item>
+        <Form.Item label="Kelamin">
+          {getFieldDecorator("gender", {
+            rules: [
+              { required: true, message: "Pilih jenis kelamin anda" }
+            ]
+          })(
+            <Select>
+              <Option value="Pria">Pria</Option>
+              <Option value="Wanita">Wanita</Option>
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="Golongan Darah">
+          {getFieldDecorator("bloodGroup", {
+            rules: [
+              { required: true, message: "Pilih Golongan Darah" }
+            ]
+          })(
+            <Select>
+              <Option value="A">A</Option>
+              <Option value="B">B</Option>
+              <Option value="AB">AB</Option>
+              <Option value="O">O</Option>
+            </Select>
+          )}
         </Form.Item>
         <Form.Item label="Agama">
           {getFieldDecorator("religion", {
@@ -277,9 +396,19 @@ class RegistrationForm extends React.Component {
               <Option value="Hindu">Hindu</Option>
               <Option value="Buddha">Buddha</Option>
               <Option value="Kong Hu Cu">Kong Hu Cu</Option>
+              <Option value="Kepercayaan Lain nya">Kepercayaan Lain nya</Option>
             </Select>
           )}
         </Form.Item>
+        {
+          religionss.includes('Kepercayaan') && <Form.Item label="Kepercayaan Lain nya">
+            {getFieldDecorator("otherReligion", {
+              rules: [
+                { required: false, message: "Tolong isi Kepercayaan Lain Anda!" }
+              ]
+            })(<Input />)}
+          </Form.Item>
+        }
         <Form.Item label="Foto Pribadi">
           {getFieldDecorator("profPic", {
             rules: [
@@ -301,7 +430,7 @@ class RegistrationForm extends React.Component {
           )}
           </Form.Item> */}
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button loading={isLoadingButton} type="primary" htmlType="submit">
             Submit
           </Button>
         </Form.Item>
