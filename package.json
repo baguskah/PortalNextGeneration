@@ -34,6 +34,8 @@
     "node-sass": "^4.12.0",
     "null-loader": "^3.0.0",
     "react": "^16.8.6",
+    "react-data-grid": "^7.0.0-alpha.18",
+    "react-data-grid-addons": "^6.1.0",
     "react-dom": "^16.8.6",
     "react-google-login": "^5.0.4"
   },

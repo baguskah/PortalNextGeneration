@@ -18,6 +18,10 @@ app
       return app.render(req, res, '/detail-participant', { slug: req.params.slug, tunnel: req.params.tunnel  });
     });
 
+    server.get('/gridviewdata/:tunnel', (req, res) => {
+      return app.render(req, res, '/gridviewdata', { tunnel: req.params.tunnel  });
+    });
+
     server.get('*', (req, res) => {
       return handle(req, res);
     });
